@@ -37,9 +37,10 @@ class Settings:
             self.tz = ZoneInfo("Asia/Kolkata")
 
         # LLM settings
-        self.llm_provider: str = os.getenv("LLM_PROVIDER", "gemini").strip().lower()
+        self.llm_provider: str = os.getenv("LLM_PROVIDER", "groq").strip().lower()
         self.gemini_api_key: str = os.getenv("GEMINI_API_KEY", "").strip()
         self.groq_api_key: str = os.getenv("GROQ_API_KEY", "").strip()
+        self.groq_model: str = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b").strip()
         self.ollama_base_url: str = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434").strip()
 
         # Storage paths
