@@ -48,16 +48,38 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     help_text = (
         "🤖 **Kage Command Center - Help**\n\n"
         "• `/start` - Check bot status and welcome greeting\n"
+        "• `/brief` - Trigger your Morning Brief on demand\n"
         "• `/help` - Show this help message\n\n"
         "💬 **Example natural prompts:**\n"
+        "• \"What's on my calendar today?\"\n"
+        "• \"Do I have any urgent emails?\"\n"
+        "• \"What GitHub notifications do I have?\"\n"
         "• \"Add a task to buy groceries tomorrow\"\n"
         "• \"Remind me to call John at 5pm today\"\n"
-        "• \"List all pending tasks\"\n"
+        "• \"What tasks are due this week?\"\n"
         "• \"Complete task 2\"\n"
-        "• \"Delete task 3\" (will ask for your confirmation)"
+        "• \"Delete task 3\" (requires confirmation)"
     )
     if update.effective_message:
         await update.effective_message.reply_text(help_text, parse_mode="Markdown")
+
+
+@restricted
+async def brief_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /brief command to generate morning brief on demand."""
+    if not update.effective_message:
+        return
+    chat_id = update.effective_chat.id
+    await context.bot.send_chat_action(chat_id=chat_id, action=ChatAction.TYPING)
+    
+    from kage.scheduler.brief import fetch_brief_raw_data, generate_morning_brief_text
+    data = fetch_brief_raw_data()
+    brief_text = await generate_morning_brief_text(data)
+
+    try:
+        await update.effective_message.reply_text(brief_text, parse_mode="Markdown")
+    except Exception:
+        await update.effective_message.reply_text(brief_text)
 
 
 @restricted

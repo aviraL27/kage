@@ -6,9 +6,10 @@ import logging
 import sys
 from telegram.ext import Application, CallbackQueryHandler, CommandHandler, MessageHandler, filters
 
-from kage.bot.handlers import handle_callback_query, handle_message, help_command, start_command
+from kage.bot.handlers import brief_command, handle_callback_query, handle_message, help_command, start_command
 from kage.config import settings
 from kage.db.database import init_db
+from kage.scheduler.brief import schedule_morning_brief_cron
 from kage.scheduler.service import scheduler_service, set_telegram_sender_hook
 
 # Setup standard logging
@@ -49,6 +50,7 @@ def build_application() -> Application:
 
     # Register handlers
     app.add_handler(CommandHandler("start", start_command))
+    app.add_handler(CommandHandler("brief", brief_command))
     app.add_handler(CommandHandler("help", help_command))
     app.add_handler(CallbackQueryHandler(handle_callback_query))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
@@ -63,8 +65,9 @@ def main() -> None:
     logger.info(f"Timezone: {settings.timezone_name}")
     logger.info(f"LLM Provider: {settings.llm_provider}")
 
-    # Start APScheduler
+    # Start APScheduler and register recurring 7:30 AM IST brief
     scheduler_service.start()
+    schedule_morning_brief_cron()
 
     app = build_application()
     logger.info("Kage is listening for updates. Press Ctrl+C to stop.")
