@@ -15,8 +15,8 @@ from kage.llm.base import ChatMessage, ToolCall
 from kage.llm.factory import get_llm
 from kage.llm.prompt import get_system_prompt
 from kage.tools.registry import registry
-# Ensure tool modules are imported and registered
-import kage.tools.tasks  # noqa: F401
+# Ensure all tool modules are imported and registered
+import kage.tools  # noqa: F401
 
 logger = logging.getLogger(__name__)
 

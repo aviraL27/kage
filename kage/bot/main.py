@@ -41,6 +41,12 @@ def build_application() -> Application:
 
     set_telegram_sender_hook(send_telegram_alert)
 
+    async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
+        """Handle errors caused by Updates."""
+        logger.warning(f"Telegram polling warning: {context.error}")
+
+    app.add_error_handler(error_handler)
+
     # Register handlers
     app.add_handler(CommandHandler("start", start_command))
     app.add_handler(CommandHandler("help", help_command))
