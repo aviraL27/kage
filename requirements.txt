@@ -1,0 +1,31 @@
+# Core Bot & Telegram
+python-telegram-bot>=21.10
+
+# Scheduling & Persistence (APScheduler with SQLite JobStore)
+APScheduler>=3.10.4,<4.0.0
+SQLAlchemy>=2.0.36
+
+# Configuration & Validation
+pydantic>=2.10.0
+pydantic-settings>=2.7.0
+python-dotenv>=1.0.1
+
+# Timezones (Windows support for zoneinfo)
+tzdata>=2024.2
+
+# LLM Providers & HTTP Clients
+google-genai>=1.0.0
+httpx>=0.28.1
+
+# Google OAuth & APIs (Calendar & Gmail read-only)
+google-auth>=2.37.0
+google-auth-oauthlib>=1.2.1
+google-auth-httplib2>=0.2.0
+google-api-python-client>=2.155.0
+
+# Model Context Protocol (FastMCP)
+mcp>=1.2.0
+
+# Testing
+pytest>=8.3.4
+pytest-asyncio>=0.25.0
