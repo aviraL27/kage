@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "category": "tasks",
+    "prompt": "Add a task: Submit quarterly tax reports by Friday 5pm",
+    "expected_tool": "add_task",
+    "description": "Adding a new task with due date"
+  },
+  {
+    "id": 2,
+    "category": "tasks",
+    "prompt": "Create a task to buy groceries this weekend",
+    "expected_tool": "add_task",
+    "description": "Adding a general task"
+  },
+  {
+    "id": 3,
+    "category": "tasks",
+    "prompt": "What tasks are currently pending on my to-do list?",
+    "expected_tool": "list_tasks",
+    "description": "Listing pending tasks"
+  },
+  {
+    "id": 4,
+    "category": "tasks",
+    "prompt": "Show me what's due today",
+    "expected_tool": "list_tasks",
+    "description": "Listing tasks due today"
+  },
+  {
+    "id": 5,
+    "category": "tasks",
+    "prompt": "Mark task #4 as completed",
+    "expected_tool": "complete_task",
+    "description": "Completing a task by ID"
+  },
+  {
+    "id": 6,
+    "category": "tasks",
+    "prompt": "Delete task 7 from my list",
+    "expected_tool": "delete_task",
+    "description": "Deleting a task by ID"
+  },
+  {
+    "id": 7,
+    "category": "reminders",
+    "prompt": "Remind me to drink water in 15 minutes",
+    "expected_tool": "set_reminder",
+    "description": "Relative reminder in minutes"
+  },
+  {
+    "id": 8,
+    "category": "reminders",
+    "prompt": "Remind me to join the design sync tomorrow at 3pm",
+    "expected_tool": "set_reminder",
+    "description": "Reminder for tomorrow afternoon"
+  },
+  {
+    "id": 9,
+    "category": "reminders",
+    "prompt": "Set a reminder to review code at 6:00 PM today",
+    "expected_tool": "set_reminder",
+    "description": "Reminder for today evening"
+  },
+  {
+    "id": 10,
+    "category": "calendar",
+    "prompt": "What events do I have on my calendar today?",
+    "expected_tool": "list_calendar_events",
+    "description": "Checking Google Calendar events for today"
+  },
+  {
+    "id": 11,
+    "category": "calendar",
+    "prompt": "Check my schedule for tomorrow",
+    "expected_tool": "list_calendar_events",
+    "description": "Checking Google Calendar events for tomorrow"
+  },
+  {
+    "id": 12,
+    "category": "email",
+    "prompt": "Do I have any urgent unread emails in Gmail?",
+    "expected_tool": "list_unread_emails",
+    "description": "Checking unread emails"
+  },
+  {
+    "id": 13,
+    "category": "email",
+    "prompt": "Show me my recent unread messages in inbox",
+    "expected_tool": "list_unread_emails",
+    "description": "Listing unread inbox messages"
+  },
+  {
+    "id": 14,
+    "category": "github",
+    "prompt": "Check my unread GitHub notifications",
+    "expected_tool": "list_github_notifications",
+    "description": "Checking unread GitHub notifications"
+  },
+  {
+    "id": 15,
+    "category": "github",
+    "prompt": "Any new PR mentions or review requests on GitHub?",
+    "expected_tool": "list_github_notifications",
+    "description": "Checking GitHub mentions/PR reviews"
+  },
+  {
+    "id": 16,
+    "category": "memory",
+    "prompt": "Remember that I like black coffee with no sugar",
+    "expected_tool": "remember_fact",
+    "description": "Storing a user preference in SQLite"
+  },
+  {
+    "id": 17,
+    "category": "memory",
+    "prompt": "Remember that my focus hours are from 9 AM to 1 PM",
+    "expected_tool": "remember_fact",
+    "description": "Storing a routine preference"
+  },
+  {
+    "id": 18,
+    "category": "memory",
+    "prompt": "What facts or preferences do you remember about me?",
+    "expected_tool": "list_memories",
+    "description": "Listing stored memories"
+  },
+  {
+    "id": 19,
+    "category": "memory",
+    "prompt": "Forget my note about favorite drink",
+    "expected_tool": "forget_fact",
+    "description": "Deleting a memory by key"
+  },
+  {
+    "id": 20,
+    "category": "chat",
+    "prompt": "Hello Kage! How are you doing today?",
+    "expected_tool": null,
+    "description": "General conversational greeting without tool invocation"
+  }
+]

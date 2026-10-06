@@ -1,0 +1,287 @@
+{
+  "timestamp": "2026-10-06T04:56:35Z",
+  "total": 20,
+  "passed": 20,
+  "failed": 0,
+  "accuracy_pct": 100.0,
+  "avg_latency_ms": 3806.55,
+  "results": [
+    {
+      "id": 1,
+      "category": "tasks",
+      "prompt": "Add a task: Submit quarterly tax reports by Friday 5pm",
+      "expected_tool": "add_task",
+      "actual_tool": "add_task",
+      "arguments": {
+        "description": "",
+        "due_date": "2026-10-09T17:00:00+05:30",
+        "title": "Submit quarterly tax reports"
+      },
+      "passed": true,
+      "latency_ms": 1030.64,
+      "error": null
+    },
+    {
+      "id": 2,
+      "category": "tasks",
+      "prompt": "Create a task to buy groceries this weekend",
+      "expected_tool": "add_task",
+      "actual_tool": "add_task",
+      "arguments": {
+        "description": "Purchase groceries for the week.",
+        "due_date": "2026-10-09T23:59:00+05:30",
+        "title": "Buy groceries"
+      },
+      "passed": true,
+      "latency_ms": 1345.18,
+      "error": null
+    },
+    {
+      "id": 3,
+      "category": "tasks",
+      "prompt": "What tasks are currently pending on my to-do list?",
+      "expected_tool": "list_tasks",
+      "actual_tool": "list_tasks",
+      "arguments": {
+        "status": "pending"
+      },
+      "passed": true,
+      "latency_ms": 908.02,
+      "error": null
+    },
+    {
+      "id": 4,
+      "category": "tasks",
+      "prompt": "Show me what's due today",
+      "expected_tool": "list_tasks",
+      "actual_tool": "list_tasks",
+      "arguments": {
+        "period": "today",
+        "status": "pending"
+      },
+      "passed": true,
+      "latency_ms": 1206.88,
+      "error": null
+    },
+    {
+      "id": 5,
+      "category": "tasks",
+      "prompt": "Mark task #4 as completed",
+      "expected_tool": "complete_task",
+      "actual_tool": "complete_task",
+      "arguments": {
+        "task_id": 4
+      },
+      "passed": true,
+      "latency_ms": 1026.65,
+      "error": null
+    },
+    {
+      "id": 6,
+      "category": "tasks",
+      "prompt": "Delete task 7 from my list",
+      "expected_tool": "delete_task",
+      "actual_tool": "delete_task",
+      "arguments": {
+        "confirmed": true,
+        "task_id": 7
+      },
+      "passed": true,
+      "latency_ms": 1091.18,
+      "error": null
+    },
+    {
+      "id": 7,
+      "category": "reminders",
+      "prompt": "Remind me to drink water in 15 minutes",
+      "expected_tool": "set_reminder",
+      "actual_tool": "set_reminder",
+      "arguments": {
+        "message": "Drink water",
+        "remind_at": "2026-10-06T10:39:18+05:30"
+      },
+      "passed": true,
+      "latency_ms": 3832.47,
+      "error": null
+    },
+    {
+      "id": 8,
+      "category": "reminders",
+      "prompt": "Remind me to join the design sync tomorrow at 3pm",
+      "expected_tool": "set_reminder",
+      "actual_tool": "set_reminder",
+      "arguments": {
+        "message": "Join the design sync",
+        "remind_at": "2026-10-07T15:00:00+05:30"
+      },
+      "passed": true,
+      "latency_ms": 7836.26,
+      "error": null
+    },
+    {
+      "id": 9,
+      "category": "reminders",
+      "prompt": "Set a reminder to review code at 6:00 PM today",
+      "expected_tool": "set_reminder",
+      "actual_tool": "set_reminder",
+      "arguments": {
+        "message": "Review code",
+        "remind_at": "2026-10-06T18:00:00+05:30"
+      },
+      "passed": true,
+      "latency_ms": 7792.06,
+      "error": null
+    },
+    {
+      "id": 10,
+      "category": "calendar",
+      "prompt": "What events do I have on my calendar today?",
+      "expected_tool": "list_calendar_events",
+      "actual_tool": "list_calendar_events",
+      "arguments": {
+        "end_date": "2026-10-06T23:59:59+05:30",
+        "max_results": 20,
+        "start_date": "2026-10-06T00:00:00+05:30"
+      },
+      "passed": true,
+      "latency_ms": 8795.6,
+      "error": null
+    },
+    {
+      "id": 11,
+      "category": "calendar",
+      "prompt": "Check my schedule for tomorrow",
+      "expected_tool": "list_calendar_events",
+      "actual_tool": "list_calendar_events",
+      "arguments": {
+        "end_date": "2026-10-07T23:59:59+05:30",
+        "max_results": 20,
+        "start_date": "2026-10-07T00:00:00+05:30"
+      },
+      "passed": true,
+      "latency_ms": 6853.05,
+      "error": null
+    },
+    {
+      "id": 12,
+      "category": "email",
+      "prompt": "Do I have any urgent unread emails in Gmail?",
+      "expected_tool": "list_unread_emails",
+      "actual_tool": "list_unread_emails",
+      "arguments": {
+        "max_results": 5
+      },
+      "passed": true,
+      "latency_ms": 8446.61,
+      "error": null
+    },
+    {
+      "id": 13,
+      "category": "email",
+      "prompt": "Show me my recent unread messages in inbox",
+      "expected_tool": "list_unread_emails",
+      "actual_tool": "list_unread_emails",
+      "arguments": {
+        "max_results": 5
+      },
+      "passed": true,
+      "latency_ms": 1294.51,
+      "error": null
+    },
+    {
+      "id": 14,
+      "category": "github",
+      "prompt": "Check my unread GitHub notifications",
+      "expected_tool": "list_github_notifications",
+      "actual_tool": "list_github_notifications",
+      "arguments": {
+        "all": false,
+        "max_results": 10
+      },
+      "passed": true,
+      "latency_ms": 2639.3,
+      "error": null
+    },
+    {
+      "id": 15,
+      "category": "github",
+      "prompt": "Any new PR mentions or review requests on GitHub?",
+      "expected_tool": "list_github_notifications",
+      "actual_tool": "list_github_notifications",
+      "arguments": {
+        "all": false,
+        "max_results": 10
+      },
+      "passed": true,
+      "latency_ms": 1168.74,
+      "error": null
+    },
+    {
+      "id": 16,
+      "category": "memory",
+      "prompt": "Remember that I like black coffee with no sugar",
+      "expected_tool": "remember_fact",
+      "actual_tool": "remember_fact",
+      "arguments": {
+        "category": "preference",
+        "key": "coffee_preference",
+        "value": "black coffee with no sugar"
+      },
+      "passed": true,
+      "latency_ms": 4473.53,
+      "error": null
+    },
+    {
+      "id": 17,
+      "category": "memory",
+      "prompt": "Remember that my focus hours are from 9 AM to 1 PM",
+      "expected_tool": "remember_fact",
+      "actual_tool": "remember_fact",
+      "arguments": {
+        "category": "preference",
+        "key": "focus_hours",
+        "value": "9 AM to 1 PM"
+      },
+      "passed": true,
+      "latency_ms": 7619.63,
+      "error": null
+    },
+    {
+      "id": 18,
+      "category": "memory",
+      "prompt": "What facts or preferences do you remember about me?",
+      "expected_tool": "list_memories",
+      "actual_tool": "list_memories",
+      "arguments": {
+        "category": null
+      },
+      "passed": true,
+      "latency_ms": 6575.15,
+      "error": null
+    },
+    {
+      "id": 19,
+      "category": "memory",
+      "prompt": "Forget my note about favorite drink",
+      "expected_tool": "forget_fact",
+      "actual_tool": "forget_fact",
+      "arguments": {
+        "key": "favorite drink"
+      },
+      "passed": true,
+      "latency_ms": 1124.58,
+      "error": null
+    },
+    {
+      "id": 20,
+      "category": "chat",
+      "prompt": "Hello Kage! How are you doing today?",
+      "expected_tool": null,
+      "actual_tool": null,
+      "arguments": {},
+      "passed": true,
+      "latency_ms": 1070.91,
+      "error": null
+    }
+  ]
+}

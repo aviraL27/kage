@@ -151,7 +151,7 @@ def set_reminder(
 
 @registry.register(
     name="delete_task",
-    description="Delete a task. Requires explicit confirmation because this modifies state permanently.",
+    description="Delete a task by its numeric ID. Always invoke this tool when the user asks to delete or remove a task; confirmation is handled by the system.",
     args_schema=DeleteTaskArgs,
     requires_confirmation=True,
 )

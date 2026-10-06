@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
+import re
 from typing import Any, Dict, List, Optional
 import httpx
 
@@ -68,35 +70,56 @@ class GroqLLM(BaseLLM):
             payload["tools"] = tools
             payload["tool_choice"] = "auto"
 
-        async with httpx.AsyncClient(timeout=45.0) as client:
-            response = await client.post(self.BASE_URL, headers=headers, json=payload)
-            if response.status_code != 200:
-                logger.error(f"Groq API error {response.status_code}: {response.text}")
-                raise RuntimeError(f"Groq API error ({response.status_code}): {response.text}")
-
-            data = response.json()
-            choice = data["choices"][0]
-            msg_data = choice["message"]
-
-            parsed_tool_calls: List[ToolCall] = []
-            if "tool_calls" in msg_data and msg_data["tool_calls"]:
-                for raw_tc in msg_data["tool_calls"]:
-                    fn_data = raw_tc.get("function", {})
-                    fn_args_str = fn_data.get("arguments", "{}")
-                    try:
-                        fn_args = json.loads(fn_args_str) if isinstance(fn_args_str, str) else fn_args_str
-                    except Exception:
-                        fn_args = {}
-                    parsed_tool_calls.append(
-                        ToolCall(
-                            id=raw_tc.get("id", ""),
-                            name=fn_data.get("name", ""),
-                            arguments=fn_args,
-                        )
+        import re
+        max_retries = 4
+        for attempt in range(max_retries):
+            async with httpx.AsyncClient(timeout=45.0) as client:
+                response = await client.post(self.BASE_URL, headers=headers, json=payload)
+                if response.status_code == 429 and attempt < max_retries - 1:
+                    wait_sec = 6.0
+                    if "retry-after" in response.headers:
+                        try:
+                            wait_sec = float(response.headers["retry-after"])
+                        except (ValueError, TypeError):
+                            pass
+                    elif "try again in" in response.text:
+                        match = re.search(r"try again in ([\d\.]+)s", response.text)
+                        if match:
+                            wait_sec = float(match.group(1)) + 0.5
+                    logger.warning(
+                        f"Groq rate limit 429 reached. Waiting {wait_sec:.1f}s before retry (attempt {attempt + 1}/{max_retries})..."
                     )
+                    await asyncio.sleep(wait_sec)
+                    continue
 
-            return LLMResponse(
-                content=msg_data.get("content") or "",
-                tool_calls=parsed_tool_calls,
-                raw=data,
-            )
+                if response.status_code != 200:
+                    logger.error(f"Groq API error {response.status_code}: {response.text}")
+                    raise RuntimeError(f"Groq API error ({response.status_code}): {response.text}")
+
+                data = response.json()
+                choice = data["choices"][0]
+                msg_data = choice["message"]
+                break
+
+        parsed_tool_calls: List[ToolCall] = []
+        if "tool_calls" in msg_data and msg_data["tool_calls"]:
+            for raw_tc in msg_data["tool_calls"]:
+                fn_data = raw_tc.get("function", {})
+                fn_args_str = fn_data.get("arguments", "{}")
+                try:
+                    fn_args = json.loads(fn_args_str) if isinstance(fn_args_str, str) else fn_args_str
+                except Exception:
+                    fn_args = {}
+                parsed_tool_calls.append(
+                    ToolCall(
+                        id=raw_tc.get("id", ""),
+                        name=fn_data.get("name", ""),
+                        arguments=fn_args,
+                    )
+                )
+
+        return LLMResponse(
+            content=msg_data.get("content") or "",
+            tool_calls=parsed_tool_calls,
+            raw=data,
+        )
