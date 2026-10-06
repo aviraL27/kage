@@ -6,10 +6,20 @@ import logging
 import sys
 from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes, MessageHandler, filters
 
-from kage.bot.handlers import brief_command, handle_callback_query, handle_message, help_command, start_command
+from kage.bot.handlers import (
+    brief_command,
+    debrief_command,
+    handle_callback_query,
+    handle_message,
+    handle_photo_message,
+    handle_voice_message,
+    help_command,
+    start_command,
+)
 from kage.config import settings
 from kage.db.database import init_db
 from kage.scheduler.brief import schedule_morning_brief_cron
+from kage.scheduler.debrief import schedule_evening_debrief_cron
 from kage.scheduler.service import scheduler_service, set_telegram_sender_hook
 from kage.web.health import start_health_server
 
@@ -52,8 +62,11 @@ def build_application() -> Application:
     # Register handlers
     app.add_handler(CommandHandler("start", start_command))
     app.add_handler(CommandHandler("brief", brief_command))
+    app.add_handler(CommandHandler("debrief", debrief_command))
     app.add_handler(CommandHandler("help", help_command))
     app.add_handler(CallbackQueryHandler(handle_callback_query))
+    app.add_handler(MessageHandler(filters.VOICE, handle_voice_message))
+    app.add_handler(MessageHandler(filters.PHOTO, handle_photo_message))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
     return app
@@ -61,7 +74,7 @@ def build_application() -> Application:
 
 def main() -> None:
     """Run the bot and scheduler service."""
-    logger.info("Initializing Kage Telegram Bot...")
+    logger.info("Initializing Kage Telegram Bot (J.A.R.V.I.S. Mode)...")
     logger.info(f"Allowed User IDs: {settings.allowed_user_ids}")
     logger.info(f"Timezone: {settings.timezone_name}")
     logger.info(f"LLM Provider: {settings.llm_provider}")
@@ -69,9 +82,10 @@ def main() -> None:
     # Start lightweight HTTP health check server for Render & UptimeRobot
     start_health_server()
 
-    # Start APScheduler and register recurring 7:30 AM IST brief
+    # Start APScheduler, register 7:30 AM IST Morning Brief & 9:30 PM IST Evening Debrief
     scheduler_service.start()
     schedule_morning_brief_cron()
+    schedule_evening_debrief_cron()
 
     app = build_application()
     logger.info("Kage is listening for updates. Press Ctrl+C to stop.")

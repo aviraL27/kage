@@ -18,7 +18,7 @@ from kage.config import settings
 from kage.db import memory as db_memory
 from kage.db import tasks as db_tasks
 from kage.scheduler.service import scheduler_service
-from kage.tools import github_tools, google_tools
+from kage.tools import github_tools, google_tools, web_tools, pc_tools
 
 logger = logging.getLogger(__name__)
 
@@ -332,6 +332,57 @@ def list_github_notifications(
 ) -> Dict[str, Any]:
     """Fetch unread GitHub notifications and mentions for repositories you participate in. Read-only."""
     return github_tools.list_github_notifications(all=all, max_results=max_results)
+
+
+# =====================================================================
+# 5. Web Search & Reader Tools
+# =====================================================================
+
+@mcp_server.tool()
+def web_search(
+    query: Annotated[
+        str,
+        Field(description="Search query to look up on the web (e.g. 'latest AI news today', 'Python documentation')."),
+    ],
+    max_results: Annotated[
+        int,
+        Field(description="Maximum number of search results to retrieve (1-10).", ge=1, le=10),
+    ] = 5,
+) -> Dict[str, Any]:
+    """Perform real-time web search for current news, facts, articles, and documentation."""
+    return web_tools.web_search(query=query, max_results=max_results)
+
+
+@mcp_server.tool()
+def fetch_web_page(
+    url: Annotated[
+        str,
+        Field(description="The full HTTP/HTTPS URL of the article, documentation, or webpage to read."),
+    ],
+) -> Dict[str, Any]:
+    """Fetch and read the readable markdown content of any webpage or article URL using Jina Reader."""
+    return web_tools.fetch_web_page(url=url)
+
+
+# =====================================================================
+# 6. Local PC Hardware Bridge Tools
+# =====================================================================
+
+@mcp_server.tool()
+def get_pc_system_status() -> Dict[str, Any]:
+    """Check local PC hardware health (battery %, power status, CPU, RAM, disk space) on Lenovo LOQ."""
+    return pc_tools.get_pc_system_status()
+
+
+@mcp_server.tool()
+def lock_workstation(
+    confirmed: Annotated[
+        bool,
+        Field(description="Confirmation to lock the computer screen. Defaults to true."),
+    ] = True,
+) -> Dict[str, Any]:
+    """Remotely lock the local Windows workstation screen."""
+    return pc_tools.lock_workstation(confirmed=confirmed)
 
 
 # =====================================================================

@@ -4,20 +4,25 @@ A self-hosted, personal command center Telegram bot powered by an LLM with tool 
 
 > **Budget**: ₹0 (100% free-tier APIs and open-source local storage).
 
-[![Tests](https://img.shields.io/badge/tests-35%20passed-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/tests-44%20passed-brightgreen.svg)](tests/)
 [![Eval Accuracy](https://img.shields.io/badge/eval%20accuracy-100%25%20(20%2F20)-brightgreen.svg)](eval/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
 
 ---
 
-## 🌟 Capabilities
+## 🌟 Capabilities (J.A.R.V.I.S. Mode)
 
-- **🌅 Morning Briefing**: Automated daily digest at 7:30 AM IST combining today's Google Calendar events, pending tasks, unread emails, and GitHub notifications. Can also be triggered on-demand via `/brief`.
-- **💬 Natural Language Understanding**: Parses and resolves temporal expressions against `Asia/Kolkata` (e.g., *"remind me to review PRs tomorrow 6pm"*, *"what's due this week?"*).
-- **📋 Persistent Tasks & Reminders**: Backed by SQLite and APScheduler with an SQLite `SQLAlchemyJobStore` that survives process restarts and power cycles.
-- **🧠 Persistent Memory**: Remembers user facts, rules, and preferences across sessions (stored in SQLite and automatically injected into the system prompt).
-- **🔌 Model Context Protocol (FastMCP)**: All 11 agent tools are exposed as an official FastMCP server (`kage-server`) and consumed by the agent through a flexible MCP client (`mode="direct"` or `mode="stdio"`).
+- **🎙️ Voice In & Voice Out**: Send voice notes in Telegram $\rightarrow$ transcribed in <400ms via Groq Whisper (`whisper-large-v3-turbo`). Kage replies back with natural neural speech via `edge-tts` (Microsoft Neural Voices).
+- **📷 Multimodal Vision**: Send any photo, receipt, handwritten note, or architecture diagram $\rightarrow$ analyzed via Groq Llama 3.2 Vision to extract action items, dates, and answers.
+- **📬 Multi-Inbox Gmail Engine**: Connect and query multiple Google accounts simultaneously (IIITN College, Personal, Work). Search full historical emails (`search_emails`), read complete threads (`read_email_thread`), and draft responses (`create_email_draft`).
+- **🌙 9:30 PM Evening Reflection**: Autonomous debrief summarizing today's achievements, flagging unfinished tasks for rollover, and previewing tomorrow's calendar. Triggerable anytime via `/debrief`.
+- **🌐 Real-Time Web Search & Reader**: Live search via DuckDuckGo and clean markdown webpage extraction via Jina Reader (`r.jina.ai`).
+- **💻 Local PC Hardware Bridge**: Remotely inspect your PC's battery %, power source, RAM, and disk space (`get_pc_system_status`), or remotely lock your workstation (`lock_workstation`).
+- **🌅 Morning Briefing**: Automated daily digest at 7:30 AM IST combining today's Google Calendar events, pending tasks, unread emails across all accounts, and GitHub notifications (`/brief`).
+- **📋 Persistent Tasks & Reminders**: Backed by SQLite and APScheduler with an SQLite `SQLAlchemyJobStore` that survives restarts.
+- **🧠 Persistent Memory**: Remembers user facts, rules, and preferences across sessions (stored in SQLite and injected into the prompt).
+- **🔌 Model Context Protocol (FastMCP)**: Standardized FastMCP server (`kage-server`) exposing 16 command center tools.
 - **🛡️ Multi-Layer Security**: Hard allowlist, read-only integrations, prompt injection defenses, and confirmation buttons for state modifications.
 
 ---

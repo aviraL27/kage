@@ -5,5 +5,7 @@ from kage.tools import tasks
 from kage.tools import google_tools
 from kage.tools import github_tools
 from kage.tools import memory
+from kage.tools import web_tools
+from kage.tools import pc_tools
 
-__all__ = ["registry", "tasks", "google_tools", "github_tools", "memory"]
+__all__ = ["registry", "tasks", "google_tools", "github_tools", "memory", "web_tools", "pc_tools"]
