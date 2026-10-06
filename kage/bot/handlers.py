@@ -14,7 +14,7 @@ from kage.config import settings
 from kage.llm.base import ChatMessage, ToolCall
 from kage.llm.factory import get_llm
 from kage.llm.prompt import get_system_prompt
-from kage.tools.registry import registry
+from kage.mcp.client import mcp_client
 # Ensure all tool modules are imported and registered
 import kage.tools  # noqa: F401
 
@@ -31,7 +31,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         f"**Active Configuration:**\n"
         f"• Timezone: `{settings.timezone_name}`\n"
         f"• LLM Provider: `{settings.llm_provider}`\n"
-        f"• Tools Loaded: `add_task`, `list_tasks`, `complete_task`, `set_reminder`, `delete_task`\n\n"
+        f"• MCP Server: `FastMCP (11 tools connected via MCP client)`\n\n"
         f"Try commands like:\n"
         f"• *\"Add a task: Review PRs due tomorrow at 6pm\"*\n"
         f"• *\"Remind me to drink water in 10 minutes\"*\n"
@@ -102,13 +102,13 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     ]
 
     llm = get_llm()
-    tools_schema = registry.get_openai_tools()
+    tools_schema = await mcp_client.get_openai_tools()
 
     try:
         # 2. First LLM call with tools
         response = await llm.generate(messages=messages, tools=tools_schema)
 
-        # 3. If LLM wants to call tools, execute them
+        # 3. If LLM wants to call tools, execute them via MCP
         if response.tool_calls:
             assistant_msg = ChatMessage(
                 role="assistant",
@@ -118,10 +118,8 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
             messages.append(assistant_msg)
 
             for tc in response.tool_calls:
-                tool_def = registry.get_tool(tc.name)
-
                 # Check if tool requires explicit user confirmation
-                if tool_def and tool_def.requires_confirmation and not tc.arguments.get("confirmed", False):
+                if mcp_client.requires_confirmation(tc.name) and not tc.arguments.get("confirmed", False):
                     # Prompt user with inline confirmation buttons
                     action_summary = f"⚠️ *Confirmation Required*\n\nAction: `{tc.name}`\nArguments: `{json.dumps(tc.arguments)}`\n\nProceed?"
                     confirm_payload = f"cf:{tc.name}:{tc.arguments.get('task_id', 0)}"
@@ -140,10 +138,10 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                     )
                     return
 
-                # Execute tool
-                tool_result = await registry.execute(
+                # Execute tool via MCP client
+                tool_result = await mcp_client.call_tool(
                     name=tc.name,
-                    raw_args=tc.arguments,
+                    arguments=tc.arguments,
                     context={"user_id": user_id, "chat_id": chat_id},
                 )
 
@@ -194,9 +192,9 @@ async def handle_callback_query(update: Update, context: ContextTypes.DEFAULT_TY
         # Confirmed deletion
         try:
             task_id = int(item_id)
-            result = await registry.execute(
+            result = await mcp_client.call_tool(
                 name="delete_task",
-                raw_args={"task_id": task_id, "confirmed": True},
+                arguments={"task_id": task_id, "confirmed": True},
             )
             msg = result.get("result", {}).get("message") or f"Task #{task_id} deleted."
             await query.edit_message_text(f"✅ {msg}")
