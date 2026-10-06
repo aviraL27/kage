@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import sys
-from telegram.ext import Application, CallbackQueryHandler, CommandHandler, MessageHandler, filters
+from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes, MessageHandler, filters
 
 from kage.bot.handlers import brief_command, handle_callback_query, handle_message, help_command, start_command
 from kage.config import settings
