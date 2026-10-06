@@ -4,7 +4,7 @@ A self-hosted, personal command center Telegram bot powered by an LLM with tool 
 
 > **Budget**: ₹0 (100% free-tier APIs and open-source local storage).
 
-[![Tests](https://img.shields.io/badge/tests-34%20passed-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/tests-35%20passed-brightgreen.svg)](tests/)
 [![Eval Accuracy](https://img.shields.io/badge/eval%20accuracy-100%25%20(20%2F20)-brightgreen.svg)](eval/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
@@ -263,6 +263,31 @@ python -m kage.bot.main
 ```
 
 Kage will now respond to your commands in Telegram, monitor your tasks, and deliver your morning briefing every day at 7:30 AM IST!
+ 
+---
+
+## 🚀 24/7 Cloud Deployment (Render Free Tier + UptimeRobot)
+
+Kage can be deployed as a **free 24/7 Web Service on Render** with zero cost (₹0):
+
+1. **Render Web Service Configuration**:
+   - **Environment**: Python 3.11 (`runtime: python`, `plan: free`)
+   - **Build Command**: `pip install --upgrade pip && pip install -r requirements.txt`
+   - **Start Command**: `python -m kage.bot.main`
+   - **Port**: Render injects dynamic `$PORT` (default `10000`), bound automatically by `kage/web/health.py`.
+2. **Environment Variables**:
+   - `TELEGRAM_BOT_TOKEN`, `TELEGRAM_ALLOWED_USER_IDS`, `TIMEZONE`
+   - `LLM_PROVIDER`, `GROQ_API_KEY`, `GROQ_MODEL`, `GITHUB_TOKEN`
+   - `GOOGLE_TOKEN_JSON`: Stringified `token.json` content (automatically written to disk on boot)
+   - `GOOGLE_CREDENTIALS_JSON`: Stringified `credentials.json` content
+3. **UptimeRobot Keep-Alive (Prevents Sleep)**:
+   - Render free-tier web services sleep after 15 minutes of HTTP inactivity.
+   - Kage exposes an HTTP probe on `/health` (and `/ping`, `/`).
+   - Add a free **HTTP(s)** monitor in [UptimeRobot](https://uptimerobot.com/):
+     - **URL**: `https://<your-render-subdomain>.onrender.com/health`
+     - **Monitoring Interval**: `5 minutes`
+   - This keeps your Telegram bot awake 24/7 without costing anything.
+
 
 ---
 
