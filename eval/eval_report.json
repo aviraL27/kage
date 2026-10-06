@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-10-06T04:56:35Z",
+  "timestamp": "2026-10-06T14:06:58Z",
   "total": 20,
-  "passed": 20,
-  "failed": 0,
-  "accuracy_pct": 100.0,
-  "avg_latency_ms": 3806.55,
+  "passed": 19,
+  "failed": 1,
+  "accuracy_pct": 95.0,
+  "avg_latency_ms": 5814.96,
   "results": [
     {
       "id": 1,
@@ -18,7 +18,7 @@
         "title": "Submit quarterly tax reports"
       },
       "passed": true,
-      "latency_ms": 1030.64,
+      "latency_ms": 1276.37,
       "error": null
     },
     {
@@ -28,12 +28,12 @@
       "expected_tool": "add_task",
       "actual_tool": "add_task",
       "arguments": {
-        "description": "Purchase groceries for the week.",
-        "due_date": "2026-10-09T23:59:00+05:30",
+        "description": "Purchase weekly groceries for the household.",
+        "due_date": "2026-10-10",
         "title": "Buy groceries"
       },
       "passed": true,
-      "latency_ms": 1345.18,
+      "latency_ms": 1682.57,
       "error": null
     },
     {
@@ -46,7 +46,7 @@
         "status": "pending"
       },
       "passed": true,
-      "latency_ms": 908.02,
+      "latency_ms": 1513.98,
       "error": null
     },
     {
@@ -60,7 +60,7 @@
         "status": "pending"
       },
       "passed": true,
-      "latency_ms": 1206.88,
+      "latency_ms": 891.11,
       "error": null
     },
     {
@@ -73,7 +73,7 @@
         "task_id": 4
       },
       "passed": true,
-      "latency_ms": 1026.65,
+      "latency_ms": 7368.97,
       "error": null
     },
     {
@@ -87,7 +87,7 @@
         "task_id": 7
       },
       "passed": true,
-      "latency_ms": 1091.18,
+      "latency_ms": 4772.86,
       "error": null
     },
     {
@@ -98,10 +98,10 @@
       "actual_tool": "set_reminder",
       "arguments": {
         "message": "Drink water",
-        "remind_at": "2026-10-06T10:39:18+05:30"
+        "remind_at": "2026-10-06T19:49:01+05:30"
       },
       "passed": true,
-      "latency_ms": 3832.47,
+      "latency_ms": 11630.98,
       "error": null
     },
     {
@@ -115,7 +115,7 @@
         "remind_at": "2026-10-07T15:00:00+05:30"
       },
       "passed": true,
-      "latency_ms": 7836.26,
+      "latency_ms": 14919.09,
       "error": null
     },
     {
@@ -123,13 +123,10 @@
       "category": "reminders",
       "prompt": "Set a reminder to review code at 6:00 PM today",
       "expected_tool": "set_reminder",
-      "actual_tool": "set_reminder",
-      "arguments": {
-        "message": "Review code",
-        "remind_at": "2026-10-06T18:00:00+05:30"
-      },
-      "passed": true,
-      "latency_ms": 7792.06,
+      "actual_tool": null,
+      "arguments": {},
+      "passed": false,
+      "latency_ms": 1324.1,
       "error": null
     },
     {
@@ -144,7 +141,7 @@
         "start_date": "2026-10-06T00:00:00+05:30"
       },
       "passed": true,
-      "latency_ms": 8795.6,
+      "latency_ms": 6889.8,
       "error": null
     },
     {
@@ -159,7 +156,7 @@
         "start_date": "2026-10-07T00:00:00+05:30"
       },
       "passed": true,
-      "latency_ms": 6853.05,
+      "latency_ms": 12154.64,
       "error": null
     },
     {
@@ -169,10 +166,11 @@
       "expected_tool": "list_unread_emails",
       "actual_tool": "list_unread_emails",
       "arguments": {
-        "max_results": 5
+        "account": "all",
+        "max_results": 10
       },
       "passed": true,
-      "latency_ms": 8446.61,
+      "latency_ms": 1186.91,
       "error": null
     },
     {
@@ -182,10 +180,11 @@
       "expected_tool": "list_unread_emails",
       "actual_tool": "list_unread_emails",
       "arguments": {
+        "account": "all",
         "max_results": 5
       },
       "passed": true,
-      "latency_ms": 1294.51,
+      "latency_ms": 3836.57,
       "error": null
     },
     {
@@ -199,7 +198,7 @@
         "max_results": 10
       },
       "passed": true,
-      "latency_ms": 2639.3,
+      "latency_ms": 12101.9,
       "error": null
     },
     {
@@ -213,7 +212,7 @@
         "max_results": 10
       },
       "passed": true,
-      "latency_ms": 1168.74,
+      "latency_ms": 6807.6,
       "error": null
     },
     {
@@ -228,7 +227,7 @@
         "value": "black coffee with no sugar"
       },
       "passed": true,
-      "latency_ms": 4473.53,
+      "latency_ms": 9279.97,
       "error": null
     },
     {
@@ -240,10 +239,10 @@
       "arguments": {
         "category": "preference",
         "key": "focus_hours",
-        "value": "9 AM to 1 PM"
+        "value": "09:00-13:00"
       },
       "passed": true,
-      "latency_ms": 7619.63,
+      "latency_ms": 961.28,
       "error": null
     },
     {
@@ -256,7 +255,7 @@
         "category": null
       },
       "passed": true,
-      "latency_ms": 6575.15,
+      "latency_ms": 11127.25,
       "error": null
     },
     {
@@ -269,7 +268,7 @@
         "key": "favorite drink"
       },
       "passed": true,
-      "latency_ms": 1124.58,
+      "latency_ms": 858.84,
       "error": null
     },
     {
@@ -280,7 +279,7 @@
       "actual_tool": null,
       "arguments": {},
       "passed": true,
-      "latency_ms": 1070.91,
+      "latency_ms": 5714.44,
       "error": null
     }
   ]

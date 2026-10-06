@@ -53,8 +53,26 @@ async def test_github_notifications_tool():
         assert "repository" in notif
 
 
+@pytest.mark.asyncio
+async def test_gmail_search_emails_tool():
+    """Verify search_emails execution via registry."""
+    if not settings.google_token_file.exists() and not list(settings.tokens_dir.glob("*.json")):
+        pytest.skip("token files not present")
+
+    res = await registry.execute("search_emails", {"query": "is:unread", "max_results": 2})
+    assert res["success"] is True
+    result = res["result"]
+    assert "count" in result
+    assert "emails" in result
+    assert isinstance(result["emails"], list)
+
+
 def test_tool_registry_has_phase3_tools():
-    """Verify all phase 3 tools are registered."""
+    """Verify all Google and email tools are registered."""
     assert registry.get_tool("list_calendar_events") is not None
     assert registry.get_tool("list_unread_emails") is not None
+    assert registry.get_tool("search_emails") is not None
+    assert registry.get_tool("read_email_thread") is not None
+    assert registry.get_tool("create_email_draft") is not None
     assert registry.get_tool("list_github_notifications") is not None
+

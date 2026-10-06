@@ -50,9 +50,25 @@ class Settings:
         # Google & GitHub integration
         self.google_credentials_file: Path = BASE_DIR / os.getenv("GOOGLE_CREDENTIALS_FILE", "credentials.json")
         self.google_token_file: Path = BASE_DIR / os.getenv("GOOGLE_TOKEN_FILE", "token.json")
+        self.tokens_dir: Path = BASE_DIR / "tokens"
+        self.tokens_dir.mkdir(parents=True, exist_ok=True)
         self.github_token: str = os.getenv("GITHUB_TOKEN", "").strip()
 
         # Cloud deployment support: write credentials/tokens from environment variables if present
+        # Multi-account tokens: GOOGLE_TOKENS_JSON can be a JSON object mapping email -> token JSON dict
+        google_tokens_env = os.getenv("GOOGLE_TOKENS_JSON", "").strip()
+        if google_tokens_env:
+            try:
+                import json
+                tokens_dict = json.loads(google_tokens_env)
+                if isinstance(tokens_dict, dict):
+                    for email_key, token_val in tokens_dict.items():
+                        target_file = self.tokens_dir / f"{email_key}.json"
+                        token_str = json.dumps(token_val) if isinstance(token_val, dict) else str(token_val)
+                        target_file.write_text(token_str, encoding="utf-8")
+            except Exception:
+                pass
+
         google_token_env = os.getenv("GOOGLE_TOKEN_JSON", "").strip()
         if google_token_env and not self.google_token_file.exists():
             self.google_token_file.parent.mkdir(parents=True, exist_ok=True)

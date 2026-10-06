@@ -249,9 +249,70 @@ def list_unread_emails(
         int,
         Field(description="Maximum number of unread emails to retrieve (1-20).", ge=1, le=20),
     ] = 5,
+    account: Annotated[
+        str,
+        Field(description="Specific email account or 'all' to check across all connected inboxes."),
+    ] = "all",
 ) -> Dict[str, Any]:
-    """Fetch recent unread emails from Gmail with subjects, senders, and safe summaries. Read-only."""
-    return google_tools.list_unread_emails(max_results=max_results)
+    """Fetch recent unread emails from Gmail with subjects, senders, and safe summaries across all accounts. Read-only."""
+    return google_tools.list_unread_emails(max_results=max_results, account=account)
+
+
+@mcp_server.tool()
+def search_emails(
+    query: Annotated[
+        str,
+        Field(description="Gmail search query filter (e.g. 'from:google', 'subject:invoice', 'has:attachment', 'after:2026/01/01')."),
+    ],
+    max_results: Annotated[
+        int,
+        Field(description="Maximum number of matching emails to retrieve (1-30).", ge=1, le=30),
+    ] = 10,
+    account: Annotated[
+        str,
+        Field(description="Specific email account or 'all' to search across all connected inboxes."),
+    ] = "all",
+) -> Dict[str, Any]:
+    """Search emails across all folders and connected accounts with full Gmail query syntax. Read-only."""
+    return google_tools.search_emails(query=query, max_results=max_results, account=account)
+
+
+@mcp_server.tool()
+def read_email_thread(
+    message_id: Annotated[
+        str,
+        Field(description="The unique Gmail message ID to read in full."),
+    ],
+    account: Annotated[
+        Optional[str],
+        Field(description="Optional account email/alias holding the message. If omitted, all accounts are searched."),
+    ] = None,
+) -> Dict[str, Any]:
+    """Fetch and read the full text content and details of a specific email message ID. Read-only."""
+    return google_tools.read_email_thread(message_id=message_id, account=account)
+
+
+@mcp_server.tool()
+def create_email_draft(
+    to: Annotated[
+        str,
+        Field(description="Recipient email address (e.g. 'colleague@example.com')."),
+    ],
+    subject: Annotated[
+        str,
+        Field(description="Subject line for the email draft."),
+    ],
+    body: Annotated[
+        str,
+        Field(description="Body content for the email draft."),
+    ],
+    account: Annotated[
+        Optional[str],
+        Field(description="Optional sender account email/alias to create the draft in. Defaults to primary account."),
+    ] = None,
+) -> Dict[str, Any]:
+    """Create an email draft in Gmail for the user to review before sending."""
+    return google_tools.create_email_draft(to=to, subject=subject, body=body, account=account)
 
 
 # =====================================================================

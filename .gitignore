@@ -51,6 +51,8 @@ credentials.json
 client_secret*.json
 token.json
 token.pickle
+tokens/
+tokens/*.json
 
 # IDE & OS
 .vscode/
