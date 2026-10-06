@@ -52,6 +52,17 @@ class Settings:
         self.google_token_file: Path = BASE_DIR / os.getenv("GOOGLE_TOKEN_FILE", "token.json")
         self.github_token: str = os.getenv("GITHUB_TOKEN", "").strip()
 
+        # Cloud deployment support: write credentials/tokens from environment variables if present
+        google_token_env = os.getenv("GOOGLE_TOKEN_JSON", "").strip()
+        if google_token_env and not self.google_token_file.exists():
+            self.google_token_file.parent.mkdir(parents=True, exist_ok=True)
+            self.google_token_file.write_text(google_token_env, encoding="utf-8")
+
+        google_creds_env = os.getenv("GOOGLE_CREDENTIALS_JSON", "").strip()
+        if google_creds_env and not self.google_credentials_file.exists():
+            self.google_credentials_file.parent.mkdir(parents=True, exist_ok=True)
+            self.google_credentials_file.write_text(google_creds_env, encoding="utf-8")
+
         # Ensure local data directory exists
         self.database_path.parent.mkdir(parents=True, exist_ok=True)
         self.jobs_database_path.parent.mkdir(parents=True, exist_ok=True)

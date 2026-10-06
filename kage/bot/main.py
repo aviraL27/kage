@@ -11,6 +11,7 @@ from kage.config import settings
 from kage.db.database import init_db
 from kage.scheduler.brief import schedule_morning_brief_cron
 from kage.scheduler.service import scheduler_service, set_telegram_sender_hook
+from kage.web.health import start_health_server
 
 # Setup standard logging
 logging.basicConfig(
@@ -64,6 +65,9 @@ def main() -> None:
     logger.info(f"Allowed User IDs: {settings.allowed_user_ids}")
     logger.info(f"Timezone: {settings.timezone_name}")
     logger.info(f"LLM Provider: {settings.llm_provider}")
+
+    # Start lightweight HTTP health check server for Render & UptimeRobot
+    start_health_server()
 
     # Start APScheduler and register recurring 7:30 AM IST brief
     scheduler_service.start()
