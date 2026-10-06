@@ -78,42 +78,44 @@ FORMAT & PERSONA:
     return response.content or "Evening debrief generated. Rest well, sir."
 
 
-async def send_evening_debrief_job() -> None:
+def daily_evening_debrief_job() -> None:
     """Scheduled task executed at 9:30 PM IST every evening."""
     logger.info("Executing scheduled Evening Debrief job...")
     if not settings.allowed_user_ids:
         logger.warning("No allowed_user_ids configured. Skipping evening debrief broadcast.")
         return
 
-    hook = scheduler_service.get_telegram_sender_hook()
-    if not hook:
+    if not _telegram_sender_hook:
         logger.warning("Telegram sender hook not registered. Cannot dispatch debrief.")
         return
 
-    data = fetch_evening_debrief_data()
-    debrief_text = await generate_evening_debrief_text(data)
+    import asyncio
+    try:
+        data = fetch_evening_debrief_data()
+        debrief_text = asyncio.run(generate_evening_debrief_text(data))
 
-    for user_id in settings.allowed_user_ids:
-        try:
-            await hook(user_id, debrief_text)
-            logger.info(f"Delivered evening debrief to user {user_id}")
-        except Exception as e:
-            logger.error(f"Failed to deliver evening debrief to {user_id}: {e}")
+        for user_id in settings.allowed_user_ids:
+            try:
+                res = _telegram_sender_hook(user_id, debrief_text)
+                if asyncio.iscoroutine(res):
+                    asyncio.run(res)
+                logger.info(f"Delivered evening debrief to user {user_id}")
+            except Exception as e:
+                logger.error(f"Failed to deliver evening debrief to {user_id}: {e}")
+    except Exception as e:
+        logger.error(f"Failed to execute daily evening debrief job: {e}", exc_info=True)
 
 
 def schedule_evening_debrief_cron() -> None:
     """Register the recurring 9:30 PM IST debrief cron job with APScheduler."""
-    job_id = "daily_evening_debrief_job"
-    existing = scheduler_service.scheduler.get_job(job_id)
-    if existing:
-        logger.info(f"Evening debrief cron job '{job_id}' already registered.")
-        return
-
-    scheduler_service.add_cron_job(
-        func=send_evening_debrief_job,
-        job_id=job_id,
+    scheduler_service.scheduler.add_job(
+        daily_evening_debrief_job,
+        "cron",
         hour=21,
         minute=30,
+        timezone=settings.tz,
+        id="daily_evening_debrief",
         replace_existing=True,
+        misfire_grace_time=3600,
     )
     logger.info("Scheduled recurring 9:30 PM IST Evening Debrief job in APScheduler.")

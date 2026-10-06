@@ -27,3 +27,17 @@ async def test_generate_evening_debrief_text():
     text = await generate_evening_debrief_text(data)
     assert isinstance(text, str)
     assert len(text) > 20
+
+
+def test_schedule_evening_debrief_cron():
+    """Verify APScheduler registers the 9:30 PM IST daily debrief job."""
+    from kage.scheduler.debrief import schedule_evening_debrief_cron
+    from kage.scheduler.service import scheduler_service
+
+    scheduler_service.start()
+    schedule_evening_debrief_cron()
+
+    job = scheduler_service.scheduler.get_job("daily_evening_debrief")
+    assert job is not None
+    assert str(job.trigger) == "cron[hour='21', minute='30']"
+
