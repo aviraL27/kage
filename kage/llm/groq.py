@@ -6,6 +6,7 @@ import asyncio
 import json
 import logging
 import re
+import time
 from typing import Any, Dict, List, Optional
 import httpx
 
@@ -91,6 +92,36 @@ class GroqLLM(BaseLLM):
                     )
                     await asyncio.sleep(wait_sec)
                     continue
+
+                if response.status_code == 400:
+                    try:
+                        err_json = response.json()
+                        err_detail = err_json.get("error", {})
+                        if err_detail.get("code") == "tool_use_failed":
+                            failed_gen = err_detail.get("failed_generation")
+                            if failed_gen:
+                                if isinstance(failed_gen, str):
+                                    try:
+                                        failed_gen = json.loads(failed_gen)
+                                    except Exception:
+                                        pass
+                                if isinstance(failed_gen, dict) and "name" in failed_gen:
+                                    logger.warning(
+                                        f"Recovered tool call from Groq tool_use_failed: {failed_gen.get('name')}"
+                                    )
+                                    return LLMResponse(
+                                        content="",
+                                        tool_calls=[
+                                            ToolCall(
+                                                id=f"call_{int(time.time()*1000)}",
+                                                name=failed_gen["name"],
+                                                arguments=failed_gen.get("arguments", {}),
+                                            )
+                                        ],
+                                        raw=err_json,
+                                    )
+                    except Exception as parse_err:
+                        logger.warning(f"Could not parse Groq 400 error payload: {parse_err}")
 
                 if response.status_code != 200:
                     logger.error(f"Groq API error {response.status_code}: {response.text}")

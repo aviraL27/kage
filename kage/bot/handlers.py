@@ -122,11 +122,15 @@ async def execute_agent_pipeline(
     llm = get_llm()
     tools_schema = await mcp_client.get_openai_tools()
 
-    # First LLM call
-    response = await llm.generate(messages=messages, tools=tools_schema)
+    max_steps = 5
+    for step in range(max_steps):
+        # Always provide tools_schema so tool calling is enabled and supported across steps
+        response = await llm.generate(messages=messages, tools=tools_schema)
 
-    # Process tool calls
-    if response.tool_calls:
+        if not response.tool_calls:
+            # Model generated a final response
+            return response.content or "(No response)"
+
         assistant_msg = ChatMessage(
             role="assistant",
             content=response.content or "",
@@ -170,11 +174,9 @@ async def execute_agent_pipeline(
                 )
             )
 
-        # Second LLM call to synthesize the result
-        final_response = await llm.generate(messages=messages)
-        return final_response.content or "Done."
-    else:
-        return response.content or "(No response)"
+    # If maximum steps reached, request final answer with tools still enabled
+    final_response = await llm.generate(messages=messages, tools=tools_schema)
+    return final_response.content or "Done."
 
 
 @restricted
